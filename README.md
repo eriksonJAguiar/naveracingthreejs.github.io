@@ -1,2 +1,2 @@
-## Animação Tabela Periodica feito a Three.js
+## Animação Corrida com Nave feito a Three.js
 
