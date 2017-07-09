@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Nave Racing</title>
+<style>
+body{
+  background-image:url(image/space.jpg);
+  backgroud-color:"#3299CC";
+}
+#webgl{
+  position:absolute;
+  z-index:11;
+  height:100%; 
+  width:100%;
+}
+</style>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/build/three.min.js"></script>
+<script src="http://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+<script src="http://simpletruthsforhealthyliving.com/js/OrbitControls.js"></script>
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body onload="start()">
+<!--<canvas id="cv"></canvas>-->
+<div id="webgl"></div>
+</body>
+</html>
