@@ -1,10 +1,12 @@
 var container;
 var camera, scene, renderer;
-var mouseX = 0, mouseY = 0;
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
 var moon,earth,plane;
-var laser;
+var star;
+var movementSpeed = 200;
+var totalObjects = 1000;
+var objectSize = 5;
+var dirs = [];
+var parts = [];
 
 
 function start(){
@@ -25,56 +27,22 @@ function init() {
         //renderizando
         renderer = new THREE.WebGLRenderer({antialias:true});
         //renderer.clear();
-        renderer.setClearColor(0x000000);
+        //renderer.setClearColor(0x000000);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMapEnabled = true;
         
-        //criando estrelas
-        // var starMaterial = new THREE.MeshBasicMaterial({overdraw: true});
-        // var starGeometry = new THREE.SphereGeometry();
-        // for (var i = 0; i < 3; i++) {
-        //   var star = new THREE.Mesh(starGeometry.clone());
-        //   star.position.x = Math.floor(Math.random() * 200 - 100) * 4;
-        //   star.position.z = Math.floor(Math.random() * 200 - 100) * 4;
-        //   star.scale.x = Math.random() * 5 + 8;
-        //   star.scale.y = Math.random() * star.scale.x * 4 + 5;
-        //   star.scale.z = star.scale.x;
-        //   THREE.GeometryUtils.merge(starGeometry, star);
-        // }
-        // var stars = new THREE.Mesh(starGeometry, starMaterial);
-        // scene.add(stars);
-        
-        var parent = new THREE.Object3D();
-        scene.add( parent );
-
-        //criando a pista
-        var planeGeometry = new THREE.PlaneGeometry(40, 200, 32);
-        var planeMaterial = new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("texture/pista.jpg"),color: 0x636161,side: THREE.DoubleSide});
-        plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.receiveShadow = true;
-
-        plane.rotation.x = -0.5 * Math.PI;
-        plane.position.x = 0;
-        plane.position.y = 0;
-        plane.rotation.z = -72.99;
-        plane.position.z = 0;
-        
-         scene.add(plane);
-        
-        
-        
         //criando a terra
-        var earthGeometry = new THREE.SphereGeometry(7, 24,0,2* Math.PI/2);
+        var earthGeometry = new THREE.SphereGeometry(10, 32, 32);
         var earthMaterial = new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('texture/earth.jpeg'),color:0xffffff});
         earth = new THREE.Mesh(earthGeometry, earthMaterial);
         earth.rotation.x = 30 * Math.PI / 180;
-        earth.position.x = 80;
-        earth.position.y = -50;
-        earth.position.z = 30;
+        earth.position.x = 70;
+        earth.position.y = -40;
+        earth.position.z = 40;
         scene.add(earth);
         
-        //criando marte
-        var moonGeometry = new THREE.SphereGeometry(7, 24, 0,2* Math.PI/2);
+        //criando lua
+        var moonGeometry = new THREE.SphereGeometry(7, 32, 32);
         var moonMaterial = new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('texture/moon.jpeg'),color:0xffffff});
         moon = new THREE.Mesh(moonGeometry, moonMaterial);
         moon.rotation.x = 30 * Math.PI / 180;
@@ -83,13 +51,24 @@ function init() {
         moon.position.z = -15;
         scene.add(moon);
         
+        
+         //criando Marte
+        var starGeometry = new THREE.SphereGeometry(9, 32, 32);
+        var starMaterial = new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('texture/mars.jpg'),color:0xffffff});
+        star = new THREE.Mesh(starGeometry, starMaterial);
+        //star.rotation.x = 30 * Math.PI / 180;
+        star.position.x = 120;
+        star.position.y = -60;
+        star.position.z = -50;
+        scene.add(star);
+        
         var loader = new THREE.OBJLoader();
 				loader.load('models/vader.obj', function ( object ) {
 
 					object.traverse( function ( child ) {
-					  object.scale.x=8;
-					  object.scale.y=8;
-					  object.scale.z=8;
+					  object.scale.x=5;
+					  object.scale.y=5;
+					  object.scale.z=5;
 					  object.position.x = -10.5;
 					  object.rotation.y = -45 * Math.PI/180;
             object.position.y = 10;
@@ -97,45 +76,73 @@ function init() {
             console.log(object);
 					  scene.add( object );
 					  
-				// 	var laserGeometry = new THREE.SphereGeometry(5, 5);
-    //       var laserMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
-    //       laser = new THREE.Mesh(laserGeometry, laserMaterial);
-    //       //earth.rotation.x = 30 * Math.PI / 180;
-    //       laser.position.x = object.position.x*2;
-    //       laser.position.y = object.position.y*2;
-    //       laser.position.z = object.position.z;
-    //       scene.add(laser); 
-					  
 					  document.addEventListener("keydown", onDocumentKeyDown, false);
             function onDocumentKeyDown(event) {
                 var keyCode = event.which;
-                    // up
+               //W
                 if (keyCode == 87) {
+                  if(object.position.y < 47){  
                     object.position.y += 0.5;
-                }else if (keyCode == 83) {
-                    object.position.y -= 0.5;
-                }else if (keyCode == 65) {
-                  if(true){ //falta inserir a condição para determinar os limites que a nave poderá ir 
+                    camera.position.y += 0.5;
+                  }
+                }//S
+                else if (keyCode == 83) {
+                    object.position.x -= 0.5;
+                    camera.position.x -= 0.5;
+                }//A
+                else if (keyCode == 65) {
+                  if(object.position.x > -68){                                                 
                     object.position.x -= 0.5;
                     camera.position.x -= 0.5;
                   }
-                } else if (keyCode == 68) {
-                  if(true){  
-                    object.position.x += 0.5;
-                    camera.position.x += 0.5;
+                }//D 
+                else if (keyCode == 68) {
+                  
+                  object.position.x += 0.5;
+                  camera.position.x += 0.5;
+    
+                }//X -> avança no eixo z
+                else if(keyCode == 88){
+                  if(object.position.z > -60){ 
+                    object.position.z -= 0.5;
+                    camera.position.z -= 0.5;
+                  }  
+                }//Z -> Volta no eixo z
+                else if(keyCode == 90){
+                  if(object.position.z > -60){ 
+                    object.position.z += 0.5;
+                    camera.position.z += 0.5;
+                  }  
+                }//alt
+                else if(keyCode == 18){
+                  var _isBoom= false;
+                  var _laserGeometry = new THREE.SphereGeometry(5, 32, 32);
+                  var _laserMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
+                  var _laser = new THREE.Mesh(_laserGeometry, _laserMaterial);
+                  //star.rotation.x = 30 * Math.PI / 180;
+                  _laser.position.x = object.position.x;
+                  _laser.position.y = object.position.y;
+                  _laser.position.z = object.position.z;
+                  var _tween = new TWEEN.Tween({x:object.position.x, y:object.position.y, z:object.position.z,rotation:0})
+                  .to({x:star.position.x, y:star.position.y,z:star.position.z,rotation:0},2)
+                    .easing(TWEEN.Easing.Cubic.InOut)
+                    .onUpdate(function(){
+                        console.log(Math.abs(_laser.position.z - star.position.z));
+                        if(Math.abs(_laser.position.z - star.position.z) <= 70 && !isBoom){
+                          var x = star.position.x;
+                          var y = star.position.y;
+                          var z = star.position.z;
+                          scene.remove(star);
+                          parts.push(new ExplodeAnimation(x,y,z));
+
+                          console.log("Boooommm...");
+                          isBoom = true;
+                      }
+                    }).start();
                   }
-                }//else if(keyCode == 88){
-                //     for(var i=0;i<50;i++){
-                //       laser.position.x *= i;
-                //       laser.position.y *= i;
-                //       laser.position.z *= i;
-                //       renderer.render(scene, camera);
-                //     }
-                // }
-                //render();
+        
                 renderer.render(scene, camera);
               }
-              
 				});
 				});
 				
@@ -154,39 +161,75 @@ function init() {
         spotLight.position.set(-40, 60, -10);
         spotLight.castShadow = true;
         scene.add(spotLight);
+        
+        
 
         //saida
         document.getElementById("webgl").appendChild(renderer.domElement);
 
 }
 
+function ExplodeAnimation(x,y,z)
+{
+  var geometry = new THREE.Geometry();
+  
+  for (i = 0; i < totalObjects; i ++) 
+  { 
+    var vertex = new THREE.Vector3();
+    vertex.x = x;
+    vertex.y = y;
+    vertex.z = z;
+  
+    geometry.vertices.push( vertex );
+    dirs.push({x:(Math.random() * movementSpeed)-(movementSpeed/2),y:(Math.random() * movementSpeed)-(movementSpeed/2),z:(Math.random() * movementSpeed)-(movementSpeed/2)});
+  }
+  var material = new THREE.ParticleBasicMaterial( { size: objectSize,  color:0x8b0000});
+  var particles = new THREE.ParticleSystem( geometry, material );
+  
+  this.object = particles;
+  this.status = true;
+  
+  this.xDir = (Math.random() * movementSpeed)-(movementSpeed/2);
+  this.yDir = (Math.random() * movementSpeed)-(movementSpeed/2);
+  this.zDir = (Math.random() * movementSpeed)-(movementSpeed/2);
+  
+  scene.add(this.object); 
+  
+  this.update = function(){
+    if (this.status === true){
+      var pCount = totalObjects;
+      while(pCount--) {
+        var particle = this.object.geometry.vertices[pCount];
+        particle.y += dirs[pCount].y;
+        particle.x += dirs[pCount].x;
+        particle.z += dirs[pCount].z;
+      }
+      this.object.geometry.verticesNeedUpdate = true;
+    }
+  };
+  
+  var pCount = parts.length;
+  while(pCount--) 
+  {
+    parts[pCount].update();
+  }
+  renderer.render( scene, camera );
+  
+}
 
 
 function animate() {
 
 	requestAnimationFrame(animate);
+	TWEEN.update();
 	render();
 
 }
 
-function move(){
-  var laserMaterial = new THREE.MeshBasicMaterial({overdraw: true});
-  var laserGeometry = new THREE.Geometry();
-}
-
-function atirar(){
- 
-}
-
 function render() {
-
-	//camera.position.x += ( mouseX - camera.position.x ) * 0.5;
-	//camera.position.y += ( - mouseY - camera.position.z ) * 0.5;
-
-	//camera.lookAt(scene.position);
-	//moon.rotation.x += 0.5;
 	earth.rotation.y += 0.01;
 	moon.rotation.y += 0.01;
+	star.rotation.y += 0.01;
 	renderer.render(scene, camera);
 
 }

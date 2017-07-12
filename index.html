@@ -2,22 +2,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Nave Racing</title>
+<title>Explode planets</title>
 <style>
 body{
   background-image:url(image/space.jpg);
-  backgroud-color:"#3299CC";
+  //backgroud-color:"#3299CC";
 }
 #webgl{
-  position:absolute;
+  position:relative;
+  background-image:url(image/space.jpg);
   z-index:11;
   height:100%; 
   width:100%;
+  margin:0;
+  padding:0;
+  opacity:0.7;
 }
 </style>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/master/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
 <script src="https://simpletruthsforhealthyliving.com/js/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
 <script type="text/javascript" src="main.js"></script>
 </head>
 <body onload="start()">
