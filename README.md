@@ -1,2 +1,2 @@
-## Animação Corrida com Nave feito a Three.js
+## Animação feito a Three.js
 

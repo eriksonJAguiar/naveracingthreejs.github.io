@@ -115,20 +115,20 @@ function init() {
                   }  
                 }//alt
                 else if(keyCode == 18){
-                  var _isBoom= false;
-                  var _laserGeometry = new THREE.SphereGeometry(5, 32, 32);
-                  var _laserMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
-                  var _laser = new THREE.Mesh(_laserGeometry, _laserMaterial);
+                  var isBoom = false;
+                  var laserGeometry = new THREE.SphereGeometry(5, 32, 32);
+                  var laserMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
+                  var laser = new THREE.Mesh(laserGeometry, laserMaterial);
                   //star.rotation.x = 30 * Math.PI / 180;
-                  _laser.position.x = object.position.x;
-                  _laser.position.y = object.position.y;
-                  _laser.position.z = object.position.z;
-                  var _tween = new TWEEN.Tween({x:object.position.x, y:object.position.y, z:object.position.z,rotation:0})
+                  laser.position.x = object.position.x;
+                  laser.position.y = object.position.y;
+                  laser.position.z = object.position.z;
+                  var tween = new TWEEN.Tween({x:object.position.x, y:object.position.y, z:object.position.z,rotation:0})
                   .to({x:star.position.x, y:star.position.y,z:star.position.z,rotation:0},2)
                     .easing(TWEEN.Easing.Cubic.InOut)
                     .onUpdate(function(){
-                        console.log(Math.abs(_laser.position.z - star.position.z));
-                        if(Math.abs(_laser.position.z - star.position.z) <= 70 && !isBoom){
+                        console.log(Math.abs(laser.position.z - star.position.z));
+                        if(Math.abs(laser.position.z - star.position.z) <= 70 && !isBoom){
                           var x = star.position.x;
                           var y = star.position.y;
                           var z = star.position.z;
